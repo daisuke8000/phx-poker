@@ -554,12 +554,22 @@ defmodule PlanningPokerWeb.RoomLive do
           <%!-- Card Selection (Glassmorphism) - プレイヤーのみ表示 --%>
           <%= if @role == :player do %>
             <div class="bg-slate-50/40 backdrop-blur-xl rounded-3xl p-5 mb-6 shadow-xl shadow-slate-500/10 border border-slate-300/30">
+              <%
+                # 誰かが投票済みならカード種類変更を無効化
+                has_any_votes = Enum.any?(@room.players, fn {_, p} -> p.role == :player and p.vote != nil end)
+              %>
               <div class="flex items-center justify-between mb-4">
                 <h2 class="text-sm font-medium text-slate-500">カードを選択</h2>
                 <form phx-change="set_cards">
                   <select
                     name="preset"
-                    class="text-xs px-2 py-1 bg-slate-100/50 backdrop-blur-sm border border-slate-300/40 rounded-lg text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400/40"
+                    disabled={has_any_votes}
+                    title={if has_any_votes, do: "投票中はカード種類を変更できません", else: ""}
+                    class={[
+                      "text-xs px-2 py-1 backdrop-blur-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400/40",
+                      !has_any_votes && "bg-slate-100/50 border-slate-300/40 text-slate-600",
+                      has_any_votes && "bg-slate-200/30 border-slate-200/30 text-slate-400 cursor-not-allowed"
+                    ]}
                   >
                     <option value="fibonacci" selected={@room.cards == [1, 2, 3, 5, 8, 13, 21, "?"]}>フィボナッチ</option>
                     <option value="modified_fibonacci" selected={@room.cards == [0, 1, 2, 3, 5, 8, 13, 21, 34, "?"]}>拡張フィボナッチ</option>
