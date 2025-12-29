@@ -610,6 +610,10 @@ defmodule PlanningPokerWeb.RoomLive do
           <% end %>
 
           <%!-- Action Buttons (Glassmorphism) --%>
+          <%
+            # 投票があるかどうか（プレイヤーのみ）
+            has_votes = Enum.any?(@room.players, fn {_, p} -> p.role == :player and p.vote != nil end)
+          %>
           <div class="flex justify-center gap-3">
             <%= if @room.revealed do %>
               <button
@@ -623,7 +627,12 @@ defmodule PlanningPokerWeb.RoomLive do
               <button
                 phx-click="reveal"
                 phx-throttle="500"
-                class="px-8 py-3 bg-slate-700/90 backdrop-blur-sm text-slate-100 font-medium rounded-2xl hover:bg-slate-600/90 transition-all duration-200 shadow-lg shadow-slate-700/20"
+                disabled={!has_votes}
+                class={[
+                  "px-8 py-3 font-medium rounded-2xl transition-all duration-200 backdrop-blur-sm",
+                  has_votes && "bg-slate-700/90 text-slate-100 hover:bg-slate-600/90 shadow-lg shadow-slate-700/20",
+                  !has_votes && "bg-slate-400/50 text-slate-300 cursor-not-allowed"
+                ]}
               >
                 カードを開く
               </button>
