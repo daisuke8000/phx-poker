@@ -10,6 +10,7 @@ defmodule PlanningPoker.Rooms.Room do
   - `rate_limits` - レート制限用タイムスタンプ %{user_id => [timestamps]}
   - `revealed` - 投票結果が公開されているか
   - `cards` - 使用可能なカードのリスト
+  - `cards_preset` - 現在のカードプリセット名（:fibonacci, :tshirt など）
   - `history` - 過去の投票履歴（直近10件）
   - `topic` - 現在の見積もり対象（ストーリー/タスク名）
   """
@@ -19,6 +20,7 @@ defmodule PlanningPoker.Rooms.Room do
   @type history_entry :: %{
           timestamp: DateTime.t(),
           topic: String.t() | nil,
+          cards_preset: atom(),
           votes: list(%{name: String.t(), vote: String.t() | integer()}),
           stats: map() | nil
         }
@@ -30,6 +32,7 @@ defmodule PlanningPoker.Rooms.Room do
           rate_limits: %{String.t() => list(integer())},
           revealed: boolean(),
           cards: list(String.t() | integer()),
+          cards_preset: atom(),
           history: list(history_entry()),
           topic: String.t() | nil
         }
@@ -56,6 +59,7 @@ defmodule PlanningPoker.Rooms.Room do
     rate_limits: %{},
     revealed: false,
     cards: [1, 2, 3, 5, 8, 13, 21, "?"],
+    cards_preset: :fibonacci,
     history: [],
     topic: nil
   ]
@@ -94,7 +98,7 @@ defmodule PlanningPoker.Rooms.Room do
           |> Enum.map(fn {id, player} -> {id, %{player | vote: nil}} end)
           |> Map.new()
 
-        {:ok, %{room | cards: cards, players: reset_players}}
+        {:ok, %{room | cards: cards, cards_preset: preset_name, players: reset_players}}
     end
   end
 
@@ -226,6 +230,7 @@ defmodule PlanningPoker.Rooms.Room do
     %{
       timestamp: DateTime.utc_now(),
       topic: room.topic,
+      cards_preset: room.cards_preset,
       votes: votes,
       stats: vote_stats(room)
     }

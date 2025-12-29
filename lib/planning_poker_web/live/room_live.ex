@@ -150,9 +150,13 @@ defmodule PlanningPokerWeb.RoomLive do
     card_value = parse_card(card)
     room_id = socket.assigns.room_id
     user_id = socket.assigns.user_id
+    current_selection = socket.assigns.selected_card
 
-    {:ok, _room} = RoomServer.vote(room_id, user_id, card_value)
-    {:noreply, assign(socket, :selected_card, card_value)}
+    # トグル: 同じカードを再度クリックしたら選択解除
+    new_vote = if current_selection == card_value, do: nil, else: card_value
+
+    {:ok, _room} = RoomServer.vote(room_id, user_id, new_vote)
+    {:noreply, assign(socket, :selected_card, new_vote)}
   end
 
   @impl true
@@ -296,6 +300,17 @@ defmodule PlanningPokerWeb.RoomLive do
     # UTCで表示（+9時間して日本時間に近似）
     jst_hour = rem(datetime.hour + 9, 24)
     "#{String.pad_leading(Integer.to_string(jst_hour), 2, "0")}:#{String.pad_leading(Integer.to_string(datetime.minute), 2, "0")}"
+  end
+
+  defp preset_label(preset) do
+    case preset do
+      :fibonacci -> "フィボナッチ"
+      :modified_fibonacci -> "拡張フィボナッチ"
+      :tshirt -> "Tシャツ"
+      :simple -> "シンプル"
+      :powers_of_2 -> "2の累乗"
+      _ -> "不明"
+    end
   end
 
   defp format_results_markdown(room) do
@@ -650,6 +665,9 @@ defmodule PlanningPokerWeb.RoomLive do
                       <div class="flex items-center gap-2">
                         <span class="text-xs text-slate-400">
                           #<%= length(@room.history) - index %>
+                        </span>
+                        <span class="text-[10px] px-1.5 py-0.5 bg-slate-300/50 text-slate-500 rounded">
+                          <%= preset_label(entry.cards_preset) %>
                         </span>
                         <%= if entry.topic do %>
                           <span class="text-sm font-medium text-slate-600 truncate max-w-xs">
