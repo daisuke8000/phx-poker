@@ -19,7 +19,7 @@ config :planning_poker, PlanningPokerWeb.Endpoint,
     layout: false
   ],
   pubsub_server: PlanningPoker.PubSub,
-  live_view: [signing_salt: "1jzzgbNz"]
+  live_view: [signing_salt: "dev-only-signing-salt-not-for-production"]
 
 # Configure esbuild (the version is required)
 config :esbuild,

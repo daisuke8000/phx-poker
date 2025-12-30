@@ -40,6 +40,13 @@ if config_env() == :prod do
 
   config :planning_poker, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
+  live_view_signing_salt =
+    System.get_env("LIVE_VIEW_SIGNING_SALT") ||
+      raise """
+      environment variable LIVE_VIEW_SIGNING_SALT is missing.
+      You can generate one by calling: mix phx.gen.secret 32
+      """
+
   config :planning_poker, PlanningPokerWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [
@@ -49,7 +56,8 @@ if config_env() == :prod do
       # for details about using IPv6 vs IPv4 and loopback vs public addresses.
       ip: {0, 0, 0, 0, 0, 0, 0, 0}
     ],
-    secret_key_base: secret_key_base
+    secret_key_base: secret_key_base,
+    live_view: [signing_salt: live_view_signing_salt]
 
   # ## SSL Support
   #
