@@ -4,7 +4,8 @@ import Config
 # you can enable the server option below.
 config :planning_poker, PlanningPokerWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "fH6LE+cYwunhV7kN89wgBHzIsseGBuNslY0+dG8D3p3ROP1zsioh6SIdp+PprXH1",
+  # Test-only secret. Not used in production.
+  secret_key_base: "test-only-secret-not-for-production-use-minimum-64-characters-required-here",
   server: false
 
 # Print only warnings and errors during test

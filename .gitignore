@@ -37,3 +37,8 @@ npm-debug.log
 
 # Local documentation (not tracked in git)
 /docs/
+
+# Environment files (may contain secrets)
+.env
+.env.*
+!.env.example

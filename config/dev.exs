@@ -13,7 +13,8 @@ config :planning_poker, PlanningPokerWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "zhavfSWO+QKTTlmEt3qTABn574C3OhOvi+pd0JvLCOLWfU1DKjOF5hq2aYq8+zTy",
+  # Development-only secret. Generate your own with: mix phx.gen.secret
+  secret_key_base: "dev-only-secret-not-for-production-use-generate-your-own-with-mix-phx-gen-secret",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:planning_poker, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:planning_poker, ~w(--watch)]}
