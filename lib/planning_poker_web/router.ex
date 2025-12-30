@@ -14,6 +14,11 @@ defmodule PlanningPokerWeb.Router do
     plug :accepts, ["json"]
   end
 
+  # Health check for Cloud Run (no pipeline needed)
+  scope "/", PlanningPokerWeb do
+    get "/up", HealthController, :index
+  end
+
   scope "/", PlanningPokerWeb do
     pipe_through :browser
 

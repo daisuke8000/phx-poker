@@ -35,3 +35,5 @@ planning_poker-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Local documentation (not tracked in git)
+/docs/

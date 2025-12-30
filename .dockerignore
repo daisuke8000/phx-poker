@@ -1,0 +1,41 @@
+# Build artifacts
+_build/
+deps/
+
+# Generated files
+.elixir_ls/
+erl_crash.dump
+*.ez
+
+# Static artifacts
+/priv/static/assets/
+
+# Version control
+.git
+.gitignore
+
+# Test and development
+test/
+.formatter.exs
+
+# Documentation
+*.md
+LICENSE
+
+# Docker
+Dockerfile*
+.dockerignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+*.log
